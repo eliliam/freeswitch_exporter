@@ -18,6 +18,7 @@ Add metrics as below:
 7. `codec`
 8. `api memory`
 9. `registration details`
+10. `amd channel info`
 
 Add feature:
 

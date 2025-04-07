@@ -7,7 +7,6 @@ A [FreeSWITCH](https://freeswitch.org/confluence/display/FREESWITCH/FreeSWITCH+E
 
 It communicates with FreeSWITCH using [mod_event_socket](https://freeswitch.org/confluence/display/FREESWITCH/mod_event_socket).
 
-
 Add metrics as below:
 
 1. `sofia gateway status`
@@ -22,7 +21,7 @@ Add metrics as below:
 
 Add feature:
 
-1. `web.config` support tls, authorization and etc. 
+1. `web.config` support tls, authorization and etc.
 
 configuration exporter web.config visit: https://prometheus.io/docs/guides/basic-auth/
 
@@ -30,14 +29,14 @@ configuration exporter web.config visit: https://prometheus.io/docs/guides/basic
 
 Pre-built static binaries are available in [releases](https://github.com/mroject/freeswitch_exporter/releases).
 
-
-
 To run it:
+
 ```bash
 ./freeswitch_exporter [flags]
 ```
 
 Help on flags:
+
 ```
 ./freeswitch_exporter --help
 usage: freeswitch_exporter [<flags>]
@@ -61,7 +60,7 @@ Flags:
 
 ## Usage
 
-Make sure [mod_event_socket](https://freeswitch.org/confluence/display/FREESWITCH/mod_event_socket) is enabled on your FreeSWITCH instance. The default mod_event_socket configuration binds to `::` (i.e., to listen to connections from any host), which will work on IPv4 or IPv6. 
+Make sure [mod_event_socket](https://freeswitch.org/confluence/display/FREESWITCH/mod_event_socket) is enabled on your FreeSWITCH instance. The default mod_event_socket configuration binds to `::` (i.e., to listen to connections from any host), which will work on IPv4 or IPv6.
 
 You can specify the scrape URI with the `--freeswitch.scrape-uri` flag. Example:
 
@@ -82,8 +81,8 @@ scrape_configs:
     scrape_interval: 15s
     static_configs:
       - targets:
-        - 10.0.0.1:8021 # Note you do need to include the port
-        - tcp://10.0.0.2:8021 # tcp:// is injected for you if the value does not start with it
+          - 10.0.0.1:8021 # Note you do need to include the port
+          - tcp://10.0.0.2:8021 # tcp:// is injected for you if the value does not start with it
     metrics_path: /probe
     relabel_configs: # This relabeling sets the instance to the target address instead of the address of the exporter
       - source_labels: [__address__]
@@ -94,7 +93,7 @@ scrape_configs:
         replacement: localhost:9282
 ```
 
-What this does is tell's Prometheus to do the following for each item in `static_configs.targets`:
+What this does is tells Prometheus to do the following for each item in `static_configs.targets`:
 
 ```shell
 curl http://localhost:9282/probe?target=10.0.0.1:8021
@@ -118,11 +117,16 @@ The exporter will try to fetch values from the following commands:
 - `api show endpoint` all used endpoint
 - `api show codec` all used codec
 - `registration` all sofia registration details
-- `api memory` get freeswitch memory info 
+- `api memory` get freeswitch memory info
+- `amd_info` get AMD channel usage info
 
 List of exposed metrics:
 
 ```bash
+# HELP freeswitch_amd_allocated allocated
+# TYPE freeswitch_amd_allocated gauge
+# HELP freeswitch_amd_available available
+# TYPE freeswitch_amd_available gauge
 # HELP freeswitch_bridged_calls Number of bridged_calls active
 # TYPE freeswitch_bridged_calls gauge
 # HELP freeswitch_current_calls Number of calls active
@@ -232,4 +236,3 @@ Dependencies will be fetched automatically.
 Feel free to send pull requests.
 
 Copyright (c) 2022 Zhang Lian Jun <z0413j@outlook.com>
-

@@ -188,12 +188,12 @@ type Verto struct {
 
 var (
 	metricList = []Metric{
-		{Name: "current_calls", Type: prometheus.GaugeValue, Help: "Number of calls active", Command: "api show calls count as json"},
-		{Name: "detailed_bridged_calls", Type: prometheus.GaugeValue, Help: "Number of detailed_bridged_calls active", Command: "api show detailed_bridged_calls as json"},
-		{Name: "detailed_calls", Type: prometheus.GaugeValue, Help: "Number of detailed_calls active", Command: "api show detailed_calls as json"},
-		{Name: "bridged_calls", Type: prometheus.GaugeValue, Help: "Number of bridged_calls active", Command: "api show bridged_calls as json"},
-		{Name: "registrations", Type: prometheus.GaugeValue, Help: "Number of registrations active", Command: "api show registrations as json"},
-		{Name: "current_channels", Type: prometheus.GaugeValue, Help: "Number of channels active", Command: "api show channels count as json"},
+		// {Name: "current_calls", Type: prometheus.GaugeValue, Help: "Number of calls active", Command: "api show calls count as json"},
+		// {Name: "detailed_bridged_calls", Type: prometheus.GaugeValue, Help: "Number of detailed_bridged_calls active", Command: "api show detailed_bridged_calls as json"},
+		// {Name: "detailed_calls", Type: prometheus.GaugeValue, Help: "Number of detailed_calls active", Command: "api show detailed_calls as json"},
+		// {Name: "bridged_calls", Type: prometheus.GaugeValue, Help: "Number of bridged_calls active", Command: "api show bridged_calls as json"},
+		// {Name: "registrations", Type: prometheus.GaugeValue, Help: "Number of registrations active", Command: "api show registrations as json"},
+		// {Name: "current_channels", Type: prometheus.GaugeValue, Help: "Number of channels active", Command: "api show channels count as json"},
 		{Name: "uptime_seconds", Type: prometheus.GaugeValue, Help: "Uptime in seconds", Command: "api uptime s"},
 		{Name: "time_synced", Type: prometheus.GaugeValue, Help: "Is FreeSWITCH time in sync with exporter host time", Command: "api strepoch"},
 		{Name: "sessions_total", Type: prometheus.CounterValue, Help: "Number of sessions since startup", RegexIndex: 1},
@@ -297,19 +297,21 @@ func (c *Collector) scrape(ch chan<- prometheus.Metric) error {
 		return err
 	}
 
-	if err = c.loadModuleMetrics(ch); err != nil {
-		return err
-	}
+	// if err = c.loadModuleMetrics(ch); err != nil {
+	// 	return err
+	// }
 
 	if err = c.endpointMetrics(ch); err != nil {
 		return err
 	}
+
 	if err = c.codecMetrics(ch); err != nil {
 		return err
 	}
-	if err = c.registrationsMetrics(ch); err != nil {
-		return err
-	}
+
+	// if err = c.registrationsMetrics(ch); err != nil {
+	// 	return err
+	// }
 
 	if err = c.vertoMetrics(ch); err != nil {
 		return err
@@ -324,7 +326,7 @@ func (c *Collector) scrape(ch chan<- prometheus.Metric) error {
 	return nil
 }
 
-func (c *Collector) variableRtpAudioMetrics(ch chan<- prometheus.Metric) error {
+func (c *Collector) variableRtpAudioMetrics(_ chan<- prometheus.Metric) error {
 	return nil
 }
 

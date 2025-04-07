@@ -1,9 +1,11 @@
 [Unit]
-Description=FreeSWITCH Exporter
+Description=Freeswitch Prometheus Exporter
 
 [Service]
-User=nobody
-ExecStart=/usr/sbin/freeswitch_exporter
+User=freeswitch
+Environment=OPTIONS=
+EnvironmentFile=-/etc/default/freeswitch_exporter
+ExecStart=/usr/local/bin/freeswitch_exporter $OPTIONS
 
 [Install]
 WantedBy=multi-user.target

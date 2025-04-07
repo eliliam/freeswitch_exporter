@@ -1,4 +1,4 @@
-module github.com/mroject/freeswitch_exporter
+module github.com/eliliam/freeswitch_exporter
 
 go 1.20
 

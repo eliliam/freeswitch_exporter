@@ -293,6 +293,10 @@ func (c *Collector) scrape(ch chan<- prometheus.Metric) error {
 		return err
 	}
 
+	if err = c.amdMetrics(ch); err != nil {
+		return err
+	}
+
 	if err = c.loadModuleMetrics(ch); err != nil {
 		return err
 	}
@@ -724,6 +728,52 @@ func (c *Collector) vertoMetrics(ch chan<- prometheus.Metric) error {
 
 		ch <- vt_load
 	}
+	return nil
+}
+
+func (c *Collector) amdMetrics(ch chan<- prometheus.Metric) error {
+	promlogConfig := &promlog.Config{}
+	logger := promlog.New(promlogConfig)
+	response, err := c.fsCommand("api amd_info")
+	if err != nil {
+		return err
+	}
+
+	scanner := bufio.NewScanner(bytes.NewReader(response))
+
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		if line == "" {
+			break
+		}
+
+		matches := regexp.MustCompile(`AMD license (.+?) => (\d+)`).FindStringSubmatch(line)
+		if matches == nil {
+			level.Debug(logger).Log("msg", "Cannot parse amd_info line", "line", line)
+			continue
+		}
+
+		field := matches[1]
+		value, err := strconv.ParseFloat(matches[2], 64)
+
+		if err != nil {
+			return fmt.Errorf("error parsing amd_info: %w", err)
+		}
+
+		metric, err := prometheus.NewConstMetric(
+			prometheus.NewDesc(namespace+"_amd_"+field, field, nil, nil),
+			prometheus.GaugeValue,
+			value,
+		)
+
+		if err != nil {
+			return err
+		}
+
+		ch <- metric
+	}
+
 	return nil
 }
 
